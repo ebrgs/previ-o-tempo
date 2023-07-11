@@ -1,0 +1,10 @@
+div, header, p, select, option, input, body, h2, h1, h3 {
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+}
+
+body {
+    background-color: rgb(241, 241, 241);
+    font-family: 'Kanit', sans-serif;
+}

@@ -1,6 +1,6 @@
 export class Api {
     static async getUserCity () {
-        const data = await fetch("https://api.hgbrasil.com/weather?format=json-cors&key=fa64b44d&user_ip=remote", {
+        const data = await fetch("https://api.hgbrasil.com/weather?format=json-cors&key=8e8b4c60&user_ip=remote", {
             method: "GET",
             mode: "cors",
             
@@ -13,7 +13,7 @@ export class Api {
         return data
     }
     static async getCityByName (name) {
-        const data = await fetch(`https://api.hgbrasil.com/weather?format=json-cors&key=fa64b44d&city_name=${name}`, {
+        const data = await fetch(`https://api.hgbrasil.com/weather?format=json-cors&key=8e8b4c60&city_name=${name}`, {
             method: "GET",
             mode: "cors",
         })

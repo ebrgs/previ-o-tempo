@@ -1,6 +1,6 @@
-import { renderPage } from "./api.js";
+import { renderPage, Api } from "./api.js";
 
-const dataCity = async () => {
+const dataCity = async (data) => {
     const mainContentContainer = document.querySelector(".mainContent")
     const diaSemana = document.querySelector('.diaSemana')
     let nameCity = document.createElement('h2')
@@ -13,9 +13,9 @@ const dataCity = async () => {
     let ventosinfos = document.createElement('span')
     let umidadeInfo = document.createElement('span')
 
-    const dataApiCity = await renderPage()
+    /* const dataApiCity = await renderPage()
     const data = dataApiCity.results
-    console.log(data)
+    console.log(data) */
 
     nameCity.innerText = data.city
     grausInfo.innerText = `${data.temp}º C`
@@ -30,6 +30,7 @@ const dataCity = async () => {
     ventosinfos.innerHTML = `<img src="./assets/repeat-outline.svg" alt=""> Ventos: ${data.wind_speedy}`
     umidadeInfo.innerHTML = `<img src="./assets/gotinha.svg" alt=""> Umidade: ${data.humidity}%`
 
+    nameCity.className = "nameCity"
     infosDay.className = "infosDay"
     boxInfos.className = "boxInfos"
     imageInfo.className = "imgDay"
@@ -38,8 +39,9 @@ const dataCity = async () => {
 
     otherInfos.append(ventosinfos, umidadeInfo)
     boxInfos.append(grausInfo, descriptionInfo)
-    infosDay.append(boxInfos, imageInfo, otherInfos)
-    mainContentContainer.append(nameCity, infosDay)
+    infosDay.append(nameCity, boxInfos, imageInfo, otherInfos)
+    
+    return (infosDay)
 
 }
 
@@ -66,15 +68,54 @@ const dataNextDays = async (data) => {
     return containerInfo
 
 }
-async function listNextDays () {
-    const secondContent = document.querySelector('.secondContent')
+async function getData () {
     const dataApiCity = await renderPage()
     const data = dataApiCity.results
-    data.forecast.forEach(async (day) => {
-        const card = await dataNextDays(day)
-        console.log(card)
-        secondContent.appendChild(card)
-    })
+    return data
 }
-dataCity()
-listNextDays()
+async function listNextDays (data) {
+    const secondContent = document.querySelector('.secondContent')
+    secondContent.innerHTML = ""
+    if(data) {
+        data.forecast.forEach(async (day) => {
+            const card = await dataNextDays(day)
+            console.log(card)
+            secondContent.appendChild(card)
+        })
+    }
+}
+async function listDay (data) {
+    console.log(data)
+    const mainContentContainer = document.querySelector(".mainContent")
+    mainContentContainer.innerHTML = ""
+    if (data) {
+        const result = await dataCity(data)
+        mainContentContainer.append(result)
+    }
+}
+
+const buttonSearch = document.querySelector("#searchCity")
+
+buttonSearch.addEventListener("click", searchCity)
+
+async function searchCity () {
+    const inputCityName = document.querySelector("#cityName")
+    const inputStateName = document.querySelector("#states")
+    const state = inputStateName.options[inputStateName.selectedIndex].value
+    const city = inputCityName.value
+
+    const query = `${city},${state}`
+
+    const result = await Api.getCityByName(query)
+    console.log(result)
+
+    listDay(result.results)
+    listNextDays(result.results)
+}
+
+const listPage = async () => {
+    const data = await getData()
+    listDay(data)
+    listNextDays(data)
+}
+listPage()

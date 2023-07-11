@@ -1,4 +1,4 @@
-class Api {
+export class Api {
     static async getUserCity () {
         const data = await fetch("https://api.hgbrasil.com/weather?key=83cd77f0&user_ip=remote", {
             method: "GET",
@@ -16,6 +16,7 @@ class Api {
         })
         .then(res => res.json())
         .then(res => {
+            console.log(res)
             return res
         })
         .catch(err => console.log(err))
